@@ -31,7 +31,7 @@ struct LottieView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        // No updates needed for now
+        // hold
     }
 }
 

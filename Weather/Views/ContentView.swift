@@ -24,7 +24,7 @@ struct ContentView: View {
     @State private var showHistory = false
     
     var body: some View {
-        NavigationView { // Wrap in NavigationView for navigation
+        NavigationView {
             VStack(spacing: 20) {
                 Text("Weather Search")
                     .font(.largeTitle)
@@ -49,14 +49,12 @@ struct ContentView: View {
                     }
                     .buttonStyle(.bordered)
                     
-                    // --- NEW: History Button ---
                     Button(action: {
                         showHistory = true
                     }) {
                         Image(systemName: "clock.arrow.circlepath")
                     }
                     .buttonStyle(.bordered)
-                    // ---------------------------
                 }
                 
                 Divider()
@@ -64,7 +62,6 @@ struct ContentView: View {
                 if locationManager.isLoading {
                     ProgressView("Finding you...")
                 } else if let forecast = forecast {
-                    // ... (Your Existing UI Code) ...
                     VStack(spacing: 10) {
                         Text("📍 \(forecast.name ?? "Unknown")")
                             .font(.headline)
@@ -74,8 +71,7 @@ struct ContentView: View {
                             .foregroundStyle(.gray)
                         
                         if let weather = forecast.weather.first {
-                            // Pass the icon code (e.g., "01d") to our helper function
-                            LottieView(filename: getLottieAnimation(for: weather.icon)) // Or whatever exact filename you have
+                            LottieView(filename: getLottieAnimation(for: weather.icon))
                         }
                         let tempCelsius = forecast.main.min - 273.15
                         Text("\(String(format: "%.1f", tempCelsius))°C")
@@ -107,12 +103,10 @@ struct ContentView: View {
                 Spacer()
             }
             .padding()
-            // Present the History Page
             .sheet(isPresented: $showHistory) {
                 NavigationView {
                     HistoryView()
                     
-                    // Add close button to sheet
                     .toolbar {
                          Button("Close") { showHistory = false }
                     }
@@ -129,37 +123,30 @@ struct ContentView: View {
         }
     }
     
-    // ... (fetch functions same as before) ...
-    // Logic 1: Search by City Name
         func fetchWeatherByCity() {
             self.errorMessage = ""
             self.forecast = nil
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             
             APIservice.shared.getWeather(city: cityInput) { result in
-                // ❌ FALSE: Do NOT save manual city searches
                 handleResult(result, shouldSave: false)
             }
         }
         
-        // Logic 2: Search by GPS
         func fetchWeatherByLocation(lat: Double, lon: Double) {
             self.errorMessage = ""
             self.cityInput = ""
             
             APIservice.shared.getWeatherByCoordinates(lat: lat, lon: lon) { result in
-                // ✅ TRUE: Only save when it comes from GPS
                 handleResult(result, shouldSave: true)
             }
         }
         
-        // --- UPDATED HANDLER ---
         func handleResult(_ result: Result<Forecast, APIservice.APIError>, shouldSave: Bool) {
             switch result {
             case .success(let data):
                 self.forecast = data
                 
-                // Check the flag before saving
                 if shouldSave {
                     saveToCoreData(forecast: data)
                 }
@@ -172,32 +159,25 @@ struct ContentView: View {
         }
     
     
-    // New Helper Function to Save
-    // Helper Function to Save (With Anti-Bloat Logic)
+
         func saveToCoreData(forecast: Forecast) {
-            // 1. Anti-Bloat: Check if we saved this city recently (e.g., in the last 1 hour)
             let fetchRequest: NSFetchRequest<SavedForecast> = SavedForecast.fetchRequest()
-            // Check for records with the same city name
             fetchRequest.predicate = NSPredicate(format: "cityName == %@", forecast.name)
-            // Sort by newest first
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-            // We only need to check the very last one
             fetchRequest.fetchLimit = 1
 
             do {
                 let recentRecords = try viewContext.fetch(fetchRequest)
                 if let lastRecord = recentRecords.first, let lastDate = lastRecord.timestamp {
-                    // If the last record was saved less than 1 hour ago (3600 seconds)
                     if Date().timeIntervalSince(lastDate) < 3600 {
                         print("⚠️ Data for \(forecast.name) was saved recently. Skipping to prevent bloat.")
-                        return // <--- STOP HERE, DO NOT SAVE
+                        return
                     }
                 }
             } catch {
                 print("Error checking history: \(error)")
             }
 
-            // 2. If no recent record exists, proceed to save
             let newRecord = SavedForecast(context: viewContext)
             newRecord.timestamp = Date()
             newRecord.cityName = forecast.name
@@ -209,24 +189,19 @@ struct ContentView: View {
                 try viewContext.save()
                 print("✅ New data saved to History!")
                 
-                // 3. Cleanup: Remove data older than 7 days
                 deleteOldData()
             } catch {
                 print("❌ Failed to save: \(error)")
             }
         }
         
-        // Helper to delete records older than 7 days
         func deleteOldData() {
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = SavedForecast.fetchRequest()
             
-            // Calculate the date 7 days ago
             let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date())!
             
-            // Predicate: "timestamp is less than (older than) 7 days ago"
             fetchRequest.predicate = NSPredicate(format: "timestamp < %@", sevenDaysAgo as NSDate)
             
-            // Batch delete request
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             
             do {
@@ -244,7 +219,6 @@ struct ContentView: View {
         formatter.timeZone = TimeZone(secondsFromGMT: timeZoneOffset)
         return formatter.string(from: date)
     }
-    // Helper to map OpenWeatherMap "icon codes" to your Lottie files
         func getLottieAnimation(for iconCode: String) -> String {
             var animationName = "sunny" // Default
             

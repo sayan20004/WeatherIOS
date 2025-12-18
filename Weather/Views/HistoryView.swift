@@ -39,13 +39,11 @@ struct HistoryView: View {
                         Text("\(String(format: "%.1f", item.temp))°C")
                             .bold()
                         
-                        // --- UPDATED: Shows Date AND Time ---
                         if let date = item.timestamp {
                             Text(formatTimestamp(date))
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
-                        // ------------------------------------
                     }
                 }
             }
@@ -65,10 +63,10 @@ struct HistoryView: View {
         }
     }
     
-    // Helper to format "Dec 12, 10:30 AM"
+    // format to eg. "Dec 12, 10:30 AM"
     func formatTimestamp(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, h:mm a" // <--- Format String
+        formatter.dateFormat = "MMM d, h:mm a" 
         return formatter.string(from: date)
     }
     

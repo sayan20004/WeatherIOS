@@ -13,7 +13,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init() {
-        // This name must match the filename you created in Step 1 (WeatherModel)
+
         container = NSPersistentContainer(name: "Weather")
         
         container.loadPersistentStores { (storeDescription, error) in
