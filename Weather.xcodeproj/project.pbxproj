@@ -6,6 +6,23 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EA2EC5D32EF425D1009595AC /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = EA2EC5D22EF425D1009595AC /* Lottie */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EA2EC5CC2EF41261009595AC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		EA6CCCDA2EEAFE1600A67B57 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,16 +40,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA2EC5D32EF425D1009595AC /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EA2EC5CD2EF41275009595AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		EA6CCCD12EEAFE1600A67B57 = {
 			isa = PBXGroup;
 			children = (
 				EA6CCCDC2EEAFE1600A67B57 /* Weather */,
+				EA2EC5CD2EF41275009595AC /* Frameworks */,
 				EA6CCCDB2EEAFE1600A67B57 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,6 +81,7 @@
 				EA6CCCD62EEAFE1600A67B57 /* Sources */,
 				EA6CCCD72EEAFE1600A67B57 /* Frameworks */,
 				EA6CCCD82EEAFE1600A67B57 /* Resources */,
+				EA2EC5CC2EF41261009595AC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -65,6 +92,7 @@
 			);
 			name = Weather;
 			packageProductDependencies = (
+				EA2EC5D22EF425D1009595AC /* Lottie */,
 			);
 			productName = Weather;
 			productReference = EA6CCCDA2EEAFE1600A67B57 /* Weather.app */;
@@ -94,6 +122,9 @@
 			);
 			mainGroup = EA6CCCD12EEAFE1600A67B57;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EA2EC5D12EF425D1009595AC /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EA6CCCDB2EEAFE1600A67B57 /* Products */;
 			projectDirPath = "";
@@ -334,6 +365,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EA2EC5D12EF425D1009595AC /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EA2EC5D22EF425D1009595AC /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA2EC5D12EF425D1009595AC /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EA6CCCD22EEAFE1600A67B57 /* Project object */;
 }
